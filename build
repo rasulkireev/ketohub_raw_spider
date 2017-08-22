@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Build steps to validate the ketohub raw input spider.
+
+# Run unit tests and calculate code coverage.
+coverage run \
+  --source ketohub \
+  -m unittest discover &&
+# Check that source has correct formatting.
+yapf --diff --recursive --style google ketohub/spiders/*.py &&
+# Run static analysis for Python bugs/cruft.
+pyflakes ketohub/spiders/*.py
+# Check docstrings for style consistency.
+PYTHONPATH=$PYTHONPATH:$(pwd)/third_party/docstringchecker \
+  pylint --reports=n ketohub/spiders
