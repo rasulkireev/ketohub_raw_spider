@@ -4,9 +4,7 @@ python:
 install:
     # Requirements needed for Travis CI
     - pip install coveralls
-    - pip install yapf
-    - pip install pyflakes
-    - pip install pylint==1.5.5
+    - pip install -r dev_requirements.txt
 script:
     ./build
 after_success:
