@@ -2,6 +2,7 @@
 """
 import scrapy
 
+
 class RawContentSpider(scrapy.Spider):
     """ Dummy spider class. """
     name = "raw_content"
