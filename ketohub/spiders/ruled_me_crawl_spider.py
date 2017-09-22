@@ -28,7 +28,7 @@ class RuledMeCrawlSpider(ketohub.spiders.raw_content_spider.RawContentSpider):
             linkextractors.LinkExtractor(allow=[
                 r'https://www.ruled.me/(\w+-)+\w+/',
             ]),
-            callback='_download_recipe_contents',
+            callback='download_recipe_contents',
             follow=False)
     ]
 

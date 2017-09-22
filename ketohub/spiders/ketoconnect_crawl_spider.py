@@ -23,7 +23,7 @@ class KetoconnectCrawlSpider(
         spiders.Rule(
             linkextractors.LinkExtractor(
                 allow=[r'https://www.ketoconnect.net/recipe/\w+(-\w+)+/']),
-            callback='_download_recipe_contents',
+            callback='download_recipe_contents',
             follow=False)
     ]
 
