@@ -8,7 +8,7 @@ class RuledMeCrawlSpiderTest(
         tests.test_raw_content_spider.RawContentSpiderTest):
     """Test case for the ruled_me_raw_content spider."""
 
-    def test_get_recipe_main_image_url_returns_first_image(self):  #pylint: disable=invalid-name
+    def test_get_recipe_main_image_url_returns_first_image(self):
         """Tests that the first image location is extracted."""
         file_content = (
             "<html><img src='images/right_image.jpg'><img src='images/wrong_image.jpg'></html>"

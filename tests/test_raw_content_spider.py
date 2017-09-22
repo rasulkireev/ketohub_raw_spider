@@ -43,7 +43,7 @@ class RawContentSpiderTest(unittest.TestCase):
         self.addCleanup(mock_get_recipe_main_image.stop)
         self.get_image_patch = mock_get_recipe_main_image.start()
 
-    def test_download_recipe_contents_with_a_simple_response(self):  #pylint: disable=invalid-name
+    def test_download_recipe_contents_with_a_simple_response(self):
         """Tests that download_recipe_contents works as expected for a simple response."""
         response = http.TextResponse(
             url='https://www.foo.com',
@@ -63,7 +63,7 @@ class RawContentSpiderTest(unittest.TestCase):
             'test_image.jpg',
             '/foo/download/root/20170102/030405Z/foo.com/main.jpg')
 
-    def test_download_recipe_contents_with_an_empty_response(self):  #pylint: disable=invalid-name
+    def test_download_recipe_contents_with_an_empty_response(self):
         """Tests that download recipe contents raises an error on an empty response."""
         response = http.TextResponse(
             url='https://www.foo.com',
@@ -77,7 +77,7 @@ class RawContentSpiderTest(unittest.TestCase):
         with self.assertRaises(raw_content_spider.UnexpectedResponse):
             spider.download_recipe_contents(response)
 
-    def test_that_undefined_download_folder_location_raises_error(self):  #pylint: disable=invalid-name
+    def test_that_undefined_download_folder_location_raises_error(self):
         """Tests that download_recipe_contents raises an error with an undefined download folder."""
         self.mock_settings.get.return_value = None
 

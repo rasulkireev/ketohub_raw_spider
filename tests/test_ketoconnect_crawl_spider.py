@@ -8,7 +8,7 @@ class KetoconnectCrawlSpiderTest(
         tests.test_raw_content_spider.RawContentSpiderTest):
     """Test case for the ketoconnect_raw_content spider."""
 
-    def test_get_recipe_main_image_url__returns_second_image(self):  #pylint: disable=invalid-name
+    def test_get_recipe_main_image_url__returns_second_image(self):
         """Tests that the correct second image is extracted."""
         file_content = (
             "<html><img src='images/wrong_image.jpg'><img src='images/right_image.jpg'></html>"
