@@ -1,5 +1,3 @@
-""" Unit tests for the class RawContentSpider.
-"""
 import datetime
 import unittest
 

@@ -1,5 +1,3 @@
-""" Defines the spider class, RawContentSpider for the project ketohub.
-"""
 import os
 import urllib
 

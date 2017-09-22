@@ -1,5 +1,3 @@
-""" Unit tests for the class RuledMeCrawlSpider.
-"""
 from scrapy import http
 
 from ketohub.spiders import ruled_me_crawl_spider

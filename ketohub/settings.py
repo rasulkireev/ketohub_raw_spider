@@ -1,4 +1,4 @@
-""" Scrapy settings for ketohub project
+"""Scrapy settings for ketohub project.
 
 http://doc.scrapy.org/en/latest/topics/settings.html
 """
