@@ -4,7 +4,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/fernandalavalle/ketohub_raw_spider/badge.svg?branch=master)](https://coveralls.io/github/fernandalavalle/ketohub_raw_spider?branch=master)
 
-To run spider from the command line, a download root directory must be specified.
+To run spider from the command line:
 
 Ex:
-`scrapy crawl raw_content DOWNLOAD_ROOT=/foo`
+```scrapy crawl raw_content -s DOWNLOAD_ROOT=/foo```

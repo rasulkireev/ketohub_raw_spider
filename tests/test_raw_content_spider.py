@@ -1,27 +1,16 @@
 """ Unit tests for the class RawContentSpider.
 """
-from __future__ import absolute_import
-
 import datetime
 import unittest
 
 import mock
+from scrapy import http
 
 from ketohub.spiders import raw_content_spider
-from scrapy.http import TextResponse, Request
-
-
-class TestSpider(raw_content_spider.RawContentSpider):
-    """ Test class for mocking the RawContentSpider. """
-
-    def __init__(self):
-        self.settings = mock.Mock()
-        self.settings.get.return_value = '/path/to/foo'
-        super(TestSpider, self).__init__()
 
 
 class RawContentSpiderTest(unittest.TestCase):
-    """ Test case for the raw_content spider. """
+    """Test case for the raw_content spider."""
 
     def setUp(self):
         mock_urllib = mock.patch(
@@ -31,7 +20,7 @@ class RawContentSpiderTest(unittest.TestCase):
         self.urllib_patch = mock_urllib.start()
 
         self.mock_start_scrape_time = datetime.datetime(
-            year=2017, day=1, month=1)
+            year=2017, month=1, day=2, hour=3, minute=4, second=5)
         mock_datetime = mock.patch(
             'ketohub.spiders.raw_content_spider.datetime')
         self.addCleanup(mock_datetime.stop)
@@ -39,68 +28,60 @@ class RawContentSpiderTest(unittest.TestCase):
         datetime_patch.utcnow.return_value = self.mock_start_scrape_time
 
         mock_write_to_file = mock.patch(
-            'ketohub.spiders.raw_content_spider.write_to_file')
+            'ketohub.spiders.raw_content_spider._write_to_file')
         self.addCleanup(mock_write_to_file.stop)
         self.write_to_file_patch = mock_write_to_file.start()
 
-        self.spider = TestSpider()
+        self.mock_settings = mock.Mock()
+        mock_settings = mock.patch(
+            'ketohub.spiders.raw_content_spider.crawler.Settings',
+            return_value=self.mock_settings)
+        self.addCleanup(mock_settings.stop)
+        mock_settings.start()
 
-    def build_expected_filepath(self, url):
-        """ Returns the expected filepath for a specific url. """
-        return '{download_root}/{scrape_start_time}/{source_url}'.format(
-            download_root='/path/to/foo',
-            scrape_start_time=self.mock_start_scrape_time.strftime(
-                '%Y%m%d/%H%M%SZ'),
-            source_url=url[12:])
+        mock_get_recipe_main_image = mock.patch(
+            'ketohub.spiders.raw_content_spider.RawContentSpider._get_recipe_main_image_url'
+        )
+        self.addCleanup(mock_get_recipe_main_image.stop)
+        self.get_image_patch = mock_get_recipe_main_image.start()
 
-    def test_offline_for_get_image_location_response_from_ketoconnect(self):  #pylint: disable=invalid-name
-        """Tests that parse_recipe wextracts the correct img src for a ketoconnect response."""
-        mock_url = 'https://www.ketoconnect.com/test/'
-        request = Request(mock_url)
-        file_content = "<html><img src='first_image.jpg'><img src='second_image.jpg'></html>"
-        response = TextResponse(
-            url=mock_url, request=request, body=file_content)
+    def test_download_recipe_contents_with_a_simple_response(self):  #pylint: disable=invalid-name
+        """Tests that download_recipe_contents works as expected for a simple response."""
+        response = http.TextResponse(
+            url='https://www.foo.com',
+            request=http.Request('https://www.foo.com'),
+            body='<html></html>')
 
-        self.spider.parse_recipe(response)
+        self.mock_settings.get.return_value = '/foo/download/root'
+        self.get_image_patch.return_value = 'test_image.jpg'
+        spider = raw_content_spider.RawContentSpider()
+        spider.download_recipe_contents(response)
 
-        # Make sure write_to_file is called with correct arguments
-        self.urllib_patch.assert_called_with(
-            'second_image.jpg',
-            '%smain.jpg' % self.build_expected_filepath(mock_url))
-
-    def test_offline_for_get_image_location_response_from_ruled(self):  #pylint: disable=invalid-name
-        """Tests that parse_recipe works extracts the correct img src for a ruled.me response."""
-        mock_url = 'https://www.ruled.me/keto-recipes/test/'
-        request = Request(mock_url)
-        file_content = "<html><img src='first_image.jpg'><img src='second_image.jpg'></html>"
-        response = TextResponse(
-            url=mock_url, request=request, body=file_content)
-
-        self.spider.parse_recipe(response)
-        self.urllib_patch.assert_called_with(
-            'first_image.jpg',
-            '%smain.jpg' % self.build_expected_filepath(mock_url))
-
-    def test_offline_parse_recipe_with_a_simple_response(self):  #pylint: disable=invalid-name
-        """ Tests that the callback parse_recipe works as expected on a simple, offline response."""
-        mock_url = 'https://www.foo.com'
-        request = Request(mock_url)
-        file_content = "<html><body></body></html>"
-        response = TextResponse(
-            url=mock_url, request=request, body=file_content)
-
-        self.spider.parse_recipe(response)
         self.write_to_file_patch.assert_called_with(
-            self.build_expected_filepath(mock_url), 'index.html', file_content)
+            '/foo/download/root/20170102/030405Z/foo.com', '<html></html>')
 
-    def test_offline_parse_recipe_with_an_empty_response(self):  #pylint: disable=invalid-name
-        """ Tests that the callback parse_recipe works as expected on an empty response."""
-        mock_url = 'https://www.foo.com'
-        request = Request(mock_url)
-        file_content = ''
-        response = TextResponse(
-            url=mock_url, request=request, body=file_content)
+        # Make sure _write_to_file is called with correct arguments.
+        self.urllib_patch.assert_called_with(
+            'test_image.jpg',
+            '/foo/download/root/20170102/030405Z/foo.com/main.jpg')
 
-        self.spider.parse_recipe(response)
-        self.write_to_file_patch.assert_called_with(
-            self.build_expected_filepath(mock_url), 'index.html', file_content)
+    def test_download_recipe_contents_with_an_empty_response(self):  #pylint: disable=invalid-name
+        """Tests that download recipe contents raises an error on an empty response."""
+        response = http.TextResponse(
+            url='https://www.foo.com',
+            request=http.Request('https://www.foo.com'),
+            body='')
+
+        self.mock_settings.get.return_value = '/mock/download/root'
+        self.get_image_patch.side_effect = IndexError
+        spider = raw_content_spider.RawContentSpider()
+
+        with self.assertRaises(raw_content_spider.UnexpectedResponse):
+            spider.download_recipe_contents(response)
+
+    def test_that_undefined_download_folder_location_raises_error(self):  #pylint: disable=invalid-name
+        """Tests that download_recipe_contents raises an error with an undefined download folder."""
+        self.mock_settings.get.return_value = None
+
+        with self.assertRaises(raw_content_spider.MissingDownloadDirectory):
+            raw_content_spider.RawContentSpider()

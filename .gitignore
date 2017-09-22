@@ -65,3 +65,5 @@ target/
 *.DS_Store
 *.xcworkspace
 
+# App Specific
+download_output/*
