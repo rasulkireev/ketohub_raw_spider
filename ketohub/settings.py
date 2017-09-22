@@ -10,3 +10,6 @@ NEWSPIDER_MODULE = 'ketohub.spiders'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
+
+# Default location for the scraped data
+DOWNLOAD_ROOT = 'download_output/'
