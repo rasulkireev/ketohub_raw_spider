@@ -32,7 +32,7 @@ def _ensure_directory_exists(directory_path):
 def _write_to_file(filepath, content):
     """Writes the response content to a local file."""
     _ensure_directory_exists(os.path.dirname(filepath))
-    open(os.path.join(filepath, 'indext.html'), 'w').write(content)
+    open(os.path.join(filepath, 'index.html'), 'w').write(content)
 
 
 class RawContentSpider(spiders.CrawlSpider):
