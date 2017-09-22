@@ -7,11 +7,8 @@ import ketohub.spiders.raw_content_spider
 class RuledMeCrawlSpider(ketohub.spiders.raw_content_spider.RawContentSpider):
     """Spider to crawl keto sites and save the html and image to a local file for each recipe."""
     name = 'ruled_me_raw_content'
-    allowed_domains = ['ruled.me', 'ketoconnect.net']
-    start_urls = [
-        'https://www.ruled.me/keto-recipes/',
-        'https://www.ketoconnect.net/recipes/'
-    ]
+    allowed_domains = ['ruled.me']
+    start_urls = ['https://www.ruled.me/keto-recipes/']
 
     rules = [
         # Extract links for food category pages ex: https://www.ruled.me/keto-recipes/breakfast/
