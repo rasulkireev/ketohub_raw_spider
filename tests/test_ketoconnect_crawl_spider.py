@@ -1,5 +1,3 @@
-""" Unit tests for the class KetoconnectCrawlSpider.
-"""
 from scrapy import http
 
 from ketohub.spiders import ketoconnect_crawl_spider

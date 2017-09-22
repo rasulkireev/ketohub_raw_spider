@@ -1,5 +1,3 @@
-""" Defines the spider class, KetoconnectCrawlSpider a subclass of RawContentSpider.
-"""
 from scrapy import linkextractors
 from scrapy import spiders
 
