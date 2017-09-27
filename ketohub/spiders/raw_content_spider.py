@@ -42,16 +42,7 @@ class RawContentSpider(spiders.CrawlSpider):
     name = 'raw_content'
 
     def __init__(self):
-        # download_root = crawler.Settings().get('DOWNLOAD_ROOT')
-        # download_root = self.settings
-        # if not download_root:
-        #     raise MissingDownloadDirectory(
-        #         'Make sure you\'re providing a download directory.')
-        # self._filepath_prefix = os.path.join(
-        #     download_root, datetime.utcnow().strftime('%Y%m%d/%H%M%SZ'))
-
         self._filepath_prefix = None
-
         super(RawContentSpider, self).__init__()
 
     def _get_recipe_main_image_url(self, response):
@@ -94,7 +85,6 @@ class RawContentSpider(spiders.CrawlSpider):
 
         filepath = os.path.join(self._filepath_prefix,
                                 self._format_recipe_key(response.url))
-        # filepath = os.path.join(self._filepath_prefix, response.url[12:])
 
         # Write response body to file
         _write_to_file(filepath, 'index.html', response.text.encode('utf8'))

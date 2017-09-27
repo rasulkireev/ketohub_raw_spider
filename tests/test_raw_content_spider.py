@@ -39,12 +39,6 @@ class RawContentSpiderTest(unittest.TestCase):
         spider._filepath_prefix = '/foo/download/root/20170102/030405Z'
         spider.download_recipe_contents(response)
 
-        # # Write response body to file
-        # _write_to_file(filepath, 'index.html', response.text.encode('utf8'))
-
-        # # Write url to metadata file
-        # _write_to_file(filepath,'metadata.json',json.dumps({'url':response.url }, indent=4, separators=(',',':')))
-
         self.write_to_file_patch.assert_has_calls([
             mock.call('/foo/download/root/20170102/030405Z/foo-com',
                       'index.html', '<html></html>'),
@@ -52,7 +46,6 @@ class RawContentSpiderTest(unittest.TestCase):
                       'metadata.json', '{\n    "url":"https://www.foo.com"\n}')
         ])
 
-        # Make sure _write_to_file is called with correct arguments.
         self.urllib_patch.assert_called_with(
             'test_image.jpg',
             '/foo/download/root/20170102/030405Z/foo-com/main.jpg')
