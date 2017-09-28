@@ -31,10 +31,10 @@ def _ensure_directory_exists(directory_path):
     os.makedirs(directory_path)
 
 
-def _write_to_file(filepath, filename, content):
+def _write_to_file(filepath, content):
     """Writes content to a local file."""
     _ensure_directory_exists(os.path.dirname(filepath))
-    open(os.path.join(filepath, filename), 'w').write(content)
+    open(filepath, 'w').write(content)
 
 
 class RawContentSpider(spiders.CrawlSpider):
@@ -83,20 +83,20 @@ class RawContentSpider(spiders.CrawlSpider):
         if not self._filepath_prefix:
             self._set_download_root()
 
-        filepath = os.path.join(self._filepath_prefix,
-                                self._format_recipe_key(response.url))
+        output_dir = os.path.join(self._filepath_prefix,
+                                  self._format_recipe_key(response.url))
 
         # Write response body to file
-        _write_to_file(filepath, 'index.html', response.text.encode('utf8'))
+        _write_to_file(
+            os.path.join(output_dir, 'index.html'),
+            response.text.encode('utf8'))
 
         # Write url to metadata file
-        _write_to_file(filepath, 'metadata.json',
-                       json.dumps(
-                           {
-                               'url': response.url
-                           },
-                           indent=4,
-                           separators=(',', ':')))
+        _write_to_file(
+            os.path.join(output_dir, 'metadata.json'),
+            json.dumps({
+                'url': response.url
+            }, indent=4, separators=(',', ':')))
 
         # Find image and save it
         try:
@@ -104,4 +104,4 @@ class RawContentSpider(spiders.CrawlSpider):
         except IndexError:
             raise UnexpectedResponse('Could not extract image from page.')
 
-        urllib.urlretrieve(image_location, os.path.join(filepath, 'main.jpg'))
+        urllib.urlretrieve(image_location, os.path.join(output_dir, 'main.jpg'))

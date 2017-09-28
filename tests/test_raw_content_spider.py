@@ -40,10 +40,11 @@ class RawContentSpiderTest(unittest.TestCase):
         spider.download_recipe_contents(response)
 
         self.write_to_file_patch.assert_has_calls([
-            mock.call('/foo/download/root/20170102/030405Z/foo-com',
-                      'index.html', '<html></html>'),
-            mock.call('/foo/download/root/20170102/030405Z/foo-com',
-                      'metadata.json', '{\n    "url":"https://www.foo.com"\n}')
+            mock.call('/foo/download/root/20170102/030405Z/foo-com/index.html',
+                      '<html></html>'),
+            mock.call(
+                '/foo/download/root/20170102/030405Z/foo-com/metadata.json',
+                '{\n    "url":"https://www.foo.com"\n}')
         ])
 
         self.urllib_patch.assert_called_with(
