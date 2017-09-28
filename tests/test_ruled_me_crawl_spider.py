@@ -19,11 +19,11 @@ class RuledMeCrawlSpiderTest(
             request=http.Request('https://www.foo.com'),
             body=file_content)
 
-        self.mock_settings.get.return_value = '/foo/download/root'
         spider = ruled_me_crawl_spider.RuledMeCrawlSpider()
+        spider._filepath_prefix = '/foo/download/root/20170102/030405Z'
         spider.download_recipe_contents(response)
 
         # Make sure _write_to_file is called with correct arguments from get_recipe_main_image
         self.urllib_patch.assert_called_with(
             'images/right_image.jpg',
-            '/foo/download/root/20170102/030405Z/foo.com/main.jpg')
+            '/foo/download/root/20170102/030405Z/foo-com/main.jpg')
