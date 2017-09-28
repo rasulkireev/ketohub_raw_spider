@@ -1,10 +1,10 @@
 from scrapy import linkextractors
 from scrapy import spiders
 
-import ketohub.spiders.raw_content_spider
+from ketohub.spiders import raw_content_spider
 
 
-class RuledMeCrawlSpider(ketohub.spiders.raw_content_spider.RawContentSpider):
+class RuledMeCrawlSpider(raw_content_spider.RawContentSpider):
     """Spider to crawl keto sites and save the html and image to a local file for each recipe."""
     name = 'ruled_me_raw_content'
     allowed_domains = ['ruled.me']

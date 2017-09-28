@@ -1,12 +1,12 @@
+import datetime
 import json
 import os
-import re
 import urllib
-
-from datetime import datetime
 
 from scrapy import crawler
 from scrapy import spiders
+
+from ketohub import recipe_key
 
 
 class Error(Exception):
@@ -38,38 +38,27 @@ def _write_to_file(filepath, content):
 
 
 class RawContentSpider(spiders.CrawlSpider):
-    """Base class to crawl keto sites and save  the html and image to a local file."""
+    """Base class to crawl keto sites and save the html and image to a local file."""
     name = 'raw_content'
 
     def __init__(self):
-        self._filepath_prefix = None
+        # Directory within the download root in which to place downloaded files.
+        self._download_subdir = datetime.datetime.utcnow().strftime(
+            '%Y%m%d/%H%M%SZ')
         super(RawContentSpider, self).__init__()
 
     def _get_recipe_main_image_url(self, response):
-        """Returns the URL for the recipe's primary image. Unimplemented in base class."""
+        """Returns the URL for the recipe's primary image.
+
+        Child classes must override this method.
+
+        Args:
+            response: Page response object.
+
+        Returns:
+            The URL for the main recipe image.
+        """
         pass
-
-    def _format_recipe_key(self, url):
-        """Formats the recipe key from the response url."""
-        # Strip out http:// or https:// prefix and www.
-        url = re.sub(r'http.://www\.', '', url)
-        # Strip trailing slash
-        url = re.sub(r'/$', '', url)
-        # Convert all characters to lowercase
-        url = url.lower()
-        # Replace all non a-z0-9/ characters with -
-        url = re.sub(r'[^a-z0-9/]', '-', url)
-        # Replace all / characters with _
-        return re.sub(r'/', '_', url)
-
-    def _set_download_root(self):
-        download_root = self.settings.get('DOWNLOAD_ROOT')
-        if not download_root:
-            raise MissingDownloadDirectory(
-                'Make sure you\'re providing a download directory.')
-
-        self._filepath_prefix = os.path.join(
-            download_root, datetime.utcnow().strftime('%Y%m%d/%H%M%SZ'))
 
     def download_recipe_contents(self, response):
         """Parses responses from the pages of individual recipes.
@@ -80,11 +69,14 @@ class RawContentSpider(spiders.CrawlSpider):
         [download_root]/YYYYMMDD/hhmmssZ/[source_domain]/[relative_url]/
          """
         # Build path for scraped files
-        if not self._filepath_prefix:
-            self._set_download_root()
+        download_root = self.settings.get('DOWNLOAD_ROOT')
+        if not download_root:
+            raise MissingDownloadDirectory(
+                'Make sure you\'re providing a download directory.')
 
-        output_dir = os.path.join(self._filepath_prefix,
-                                  self._format_recipe_key(response.url))
+        key = recipe_key.from_url(response.url)
+
+        output_dir = os.path.join(download_root, self._download_subdir, key)
 
         # Write response body to file
         _write_to_file(
@@ -100,8 +92,8 @@ class RawContentSpider(spiders.CrawlSpider):
 
         # Find image and save it
         try:
-            image_location = self._get_recipe_main_image_url(response)
+            image_url = self._get_recipe_main_image_url(response)
         except IndexError:
             raise UnexpectedResponse('Could not extract image from page.')
 
-        urllib.urlretrieve(image_location, os.path.join(output_dir, 'main.jpg'))
+        urllib.urlretrieve(image_url, os.path.join(output_dir, 'main.jpg'))
