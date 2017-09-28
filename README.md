@@ -5,7 +5,7 @@
 
 To run spider from the command line:
 
-Ex:
-```scrapy crawl ketoconnect_raw_content -s DOWNLOAD_ROOT=/foo```
-
-```scrapy crawl ruled_me_raw_content -s DOWNLOAD_ROOT=/foo```
+```bash
+scrapy crawl ketoconnect_raw_content -s DOWNLOAD_ROOT=downloads/
+scrapy crawl ruled_me_raw_content -s DOWNLOAD_ROOT=downloads/
+```
