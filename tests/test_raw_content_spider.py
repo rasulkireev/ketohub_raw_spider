@@ -12,7 +12,7 @@ class RawContentSpiderTest(unittest.TestCase):
 
     def setUp(self):
         mock_urllib = mock.patch(
-            'ketohub.spiders.raw_content_spider.urllib.urlretrieve',
+            'ketohub.spiders.raw_content_spider.urllib.urlopen',
             autospec=True)
         self.addCleanup(mock_urllib.stop)
         self.urllib_patch = mock_urllib.start()

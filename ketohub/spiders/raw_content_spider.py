@@ -24,6 +24,15 @@ class MissingDownloadDirectory(Error):
     pass
 
 
+class ImageDownloadError(Error):
+    """Failed to download the recipe main image."""
+    pass
+
+class UnexpectedImageType(Error):
+    """Failed to download the recipe main image."""
+    pass
+
+
 def _ensure_directory_exists(directory_path):
     """Ensures the directories in directory_path exist."""
     if os.path.exists(directory_path):
@@ -34,7 +43,7 @@ def _ensure_directory_exists(directory_path):
 def _write_to_file(filepath, content):
     """Writes content to a local file."""
     _ensure_directory_exists(os.path.dirname(filepath))
-    open(filepath, 'w').write(content)
+    open(filepath, 'wb').write(content)
 
 
 class RawContentSpider(spiders.CrawlSpider):
@@ -96,4 +105,11 @@ class RawContentSpider(spiders.CrawlSpider):
         except IndexError:
             raise UnexpectedResponse('Could not extract image from page.')
 
-        urllib.urlretrieve(image_url, os.path.join(output_dir, 'main.jpg'))
+        image_handle = urllib.urlopen(image_url)
+        if image_handle.getcode() != 200:
+            raise ImageDownloadError('Failed to download image: %s, error: %d' % (image_url, image_handle.getcode()))
+        if image_handle.info().type != 'image/jpeg':
+            raise UnexpectedImageType('Unexpected image type: ' + image_handle.info().type)
+        image_data = image_handle.read()
+        _write_to_file(os.path.join(output_dir, 'main.jpg'),
+                       image_data)
