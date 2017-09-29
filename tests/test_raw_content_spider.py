@@ -1,4 +1,5 @@
 import datetime
+import io
 import unittest
 
 import mock
@@ -11,11 +12,10 @@ class RawContentSpiderTest(unittest.TestCase):
     """Test case for the raw_content spider."""
 
     def setUp(self):
-        mock_urllib = mock.patch(
-            'ketohub.spiders.raw_content_spider.urllib.urlretrieve',
-            autospec=True)
-        self.addCleanup(mock_urllib.stop)
-        self.urllib_patch = mock_urllib.start()
+        mock_urlopen = mock.patch(
+            'ketohub.spiders.raw_content_spider.urllib.urlopen', autospec=True)
+        self.addCleanup(mock_urlopen.stop)
+        self.urlopen_patch = mock_urlopen.start()
 
         self.mock_start_scrape_time = datetime.datetime(
             year=2017, month=1, day=2, hour=3, minute=4, second=5)
@@ -25,10 +25,12 @@ class RawContentSpiderTest(unittest.TestCase):
         datetime_patch = mock_datetime.start()
         datetime_patch.utcnow.return_value = self.mock_start_scrape_time
 
-        mock_write_to_file = mock.patch(
-            'ketohub.spiders.raw_content_spider._write_to_file')
-        self.addCleanup(mock_write_to_file.stop)
-        self.write_to_file_patch = mock_write_to_file.start()
+        mock_content_saver = mock.patch(
+            'ketohub.spiders.raw_content_spider.persist.ContentSaver')
+        self.addCleanup(mock_content_saver.stop)
+        self.content_saver_patch = mock_content_saver.start()
+        self.mock_saver = mock.Mock()
+        self.content_saver_patch.return_value = self.mock_saver
 
         mock_get_recipe_main_image = mock.patch(
             'ketohub.spiders.raw_content_spider.RawContentSpider._get_recipe_main_image_url'
@@ -46,22 +48,24 @@ class RawContentSpiderTest(unittest.TestCase):
             request=http.Request('https://www.foo.com'),
             body='<html></html>')
 
-        self.get_image_patch.return_value = 'test_image.jpg'
+        self.get_image_patch.return_value = 'https://mock.com/test_image.jpg'
+        self.urlopen_patch.return_value = io.BytesIO('dummy image data')
         spider = raw_content_spider.RawContentSpider()
         spider.settings = self.mock_settings
         spider.download_recipe_contents(response)
 
-        self.write_to_file_patch.assert_has_calls([
-            mock.call('dummy_download_root/20170102/030405Z/foo-com/index.html',
-                      '<html></html>'),
-            mock.call(
-                'dummy_download_root/20170102/030405Z/foo-com/metadata.json',
-                '{\n    "url":"https://www.foo.com"\n}')
-        ])
+        self.content_saver_patch.assert_called_once_with(
+            'dummy_download_root/20170102/030405Z/foo-com')
+        self.mock_saver.save_recipe_html.assert_called_once_with(
+            '<html></html>')
+        self.mock_saver.save_metadata.assert_called_once_with({
+            'url':
+            'https://www.foo.com',
+        })
+        self.mock_saver.save_main_image.assert_called_once_with(
+            'dummy image data')
 
-        self.urllib_patch.assert_called_with(
-            'test_image.jpg',
-            'dummy_download_root/20170102/030405Z/foo-com/main.jpg')
+        self.urlopen_patch.assert_called_with('https://mock.com/test_image.jpg')
 
     def test_download_recipe_contents_with_an_empty_response(self):
         """Tests that download recipe contents raises an error on an empty response."""

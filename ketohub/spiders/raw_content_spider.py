@@ -6,6 +6,7 @@ import urllib
 from scrapy import crawler
 from scrapy import spiders
 
+from ketohub import persist
 from ketohub import recipe_key
 
 
@@ -22,19 +23,6 @@ class UnexpectedResponse(Error):
 class MissingDownloadDirectory(Error):
     """Error raised when the download directory is not defined."""
     pass
-
-
-def _ensure_directory_exists(directory_path):
-    """Ensures the directories in directory_path exist."""
-    if os.path.exists(directory_path):
-        return True
-    os.makedirs(directory_path)
-
-
-def _write_to_file(filepath, content):
-    """Writes content to a local file."""
-    _ensure_directory_exists(os.path.dirname(filepath))
-    open(filepath, 'w').write(content)
 
 
 class RawContentSpider(spiders.CrawlSpider):
@@ -60,6 +48,17 @@ class RawContentSpider(spiders.CrawlSpider):
         """
         pass
 
+    def _make_content_saver(self, url):
+        download_root = self.settings.get('DOWNLOAD_ROOT')
+        if not download_root:
+            raise MissingDownloadDirectory(
+                'Make sure you\'re providing a download directory.')
+
+        key = recipe_key.from_url(url)
+
+        output_dir = os.path.join(download_root, self._download_subdir, key)
+        return persist.ContentSaver(output_dir)
+
     def download_recipe_contents(self, response):
         """Parses responses from the pages of individual recipes.
 
@@ -68,32 +67,16 @@ class RawContentSpider(spiders.CrawlSpider):
 
         [download_root]/YYYYMMDD/hhmmssZ/[source_domain]/[relative_url]/
          """
-        # Build path for scraped files
-        download_root = self.settings.get('DOWNLOAD_ROOT')
-        if not download_root:
-            raise MissingDownloadDirectory(
-                'Make sure you\'re providing a download directory.')
-
-        key = recipe_key.from_url(response.url)
-
-        output_dir = os.path.join(download_root, self._download_subdir, key)
-
-        # Write response body to file
-        _write_to_file(
-            os.path.join(output_dir, 'index.html'),
-            response.text.encode('utf8'))
-
-        # Write url to metadata file
-        _write_to_file(
-            os.path.join(output_dir, 'metadata.json'),
-            json.dumps({
-                'url': response.url
-            }, indent=4, separators=(',', ':')))
+        content_saver = self._make_content_saver(response.url)
+        content_saver.save_recipe_html(response.text.encode('utf8'))
+        content_saver.save_metadata({'url': response.url})
 
         # Find image and save it
         try:
             image_url = self._get_recipe_main_image_url(response)
+
         except IndexError:
             raise UnexpectedResponse('Could not extract image from page.')
 
-        urllib.urlretrieve(image_url, os.path.join(output_dir, 'main.jpg'))
+        image_handle = urllib.urlopen(image_url)
+        content_saver.save_main_image(image_handle.read())
