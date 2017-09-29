@@ -23,7 +23,4 @@ class KetoconnectCrawlSpiderTest(
         spider.settings = self.mock_settings
         spider.download_recipe_contents(response)
 
-        # Make sure _write_to_file is called with correct arguments from get_recipe_main_image
-        self.urllib_patch.assert_called_with(
-            'images/right_image.jpg',
-            'dummy_download_root/20170102/030405Z/foo-com/main.jpg')
+        self.urlopen_patch.assert_called_with('images/right_image.jpg')
