@@ -17,7 +17,7 @@ coverage run \
 yapf --diff --recursive --style google ./ --exclude=./third_party/*
 
 # Run static analysis for Python bugs/cruft.
-pyflakes ketohub/*.py tests/*.py
+pyflakes $(find ./ -type f -name '*.py' | xargs)
 
 # Check docstrings for style consistency.
 PYTHONPATH=$PYTHONPATH:$(pwd)/third_party/docstringchecker \

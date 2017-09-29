@@ -1,9 +1,7 @@
 import datetime
-import json
 import os
 import urllib
 
-from scrapy import crawler
 from scrapy import spiders
 
 from ketohub import persist
