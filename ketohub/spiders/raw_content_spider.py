@@ -2,6 +2,7 @@ import datetime
 import os
 import urllib
 
+from scrapy import conf
 from scrapy import spiders
 
 from ketohub import persist
@@ -47,7 +48,7 @@ class RawContentSpider(spiders.CrawlSpider):
         pass
 
     def _make_content_saver(self, url):
-        download_root = self.settings.get('DOWNLOAD_ROOT')
+        download_root = conf.settings.get('DOWNLOAD_ROOT')
         if not download_root:
             raise MissingDownloadDirectory(
                 'Make sure you\'re providing a download directory.')

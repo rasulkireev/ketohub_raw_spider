@@ -20,7 +20,6 @@ class RuledMeCrawlSpiderTest(
             body=file_content)
 
         spider = ruled_me_crawl_spider.RuledMeCrawlSpider()
-        spider.settings = self.mock_settings
         spider.download_recipe_contents(response)
 
         self.urlopen_patch.assert_called_once_with('images/right_image.jpg')
