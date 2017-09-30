@@ -38,9 +38,6 @@ class RawContentSpiderTest(unittest.TestCase):
         self.addCleanup(mock_get_recipe_main_image.stop)
         self.get_image_patch = mock_get_recipe_main_image.start()
 
-        self.mock_settings = mock.Mock(spec=['get'])
-        self.mock_settings.get.return_value = 'dummy_download_root'
-
     def test_download_recipe_contents_with_a_simple_response(self):
         """Tests that download_recipe_contents works as expected for a simple response."""
         response = http.TextResponse(
@@ -51,11 +48,10 @@ class RawContentSpiderTest(unittest.TestCase):
         self.get_image_patch.return_value = 'https://mock.com/test_image.jpg'
         self.urlopen_patch.return_value = io.BytesIO('dummy image data')
         spider = raw_content_spider.RawContentSpider()
-        spider.settings = self.mock_settings
         spider.download_recipe_contents(response)
 
         self.content_saver_patch.assert_called_once_with(
-            'dummy_download_root/20170102/030405Z/foo-com')
+            'download_output/20170102/030405Z/foo-com')
         self.mock_saver.save_recipe_html.assert_called_once_with(
             '<html></html>')
         self.mock_saver.save_metadata.assert_called_once_with({
@@ -76,22 +72,6 @@ class RawContentSpiderTest(unittest.TestCase):
 
         self.get_image_patch.side_effect = IndexError
         spider = raw_content_spider.RawContentSpider()
-        spider.settings = self.mock_settings
 
         with self.assertRaises(raw_content_spider.UnexpectedResponse):
-            spider.download_recipe_contents(response)
-
-    def test_that_undefined_download_folder_location_raises_error(self):
-        """Tests that download_recipe_contents raises an error with an undefined download folder."""
-        response = http.TextResponse(
-            url='https://www.foo.com',
-            request=http.Request('https://www.foo.com'),
-            body='')
-
-        mock_settings = mock.Mock()
-        mock_settings.get.return_value = None
-        spider = raw_content_spider.RawContentSpider()
-        spider.settings = mock_settings
-
-        with self.assertRaises(raw_content_spider.MissingDownloadDirectory):
             spider.download_recipe_contents(response)

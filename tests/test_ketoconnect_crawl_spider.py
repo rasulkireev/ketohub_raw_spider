@@ -20,7 +20,6 @@ class KetoconnectCrawlSpiderTest(
             body=file_content)
 
         spider = ketoconnect_crawl_spider.KetoconnectCrawlSpider()
-        spider.settings = self.mock_settings
         spider.download_recipe_contents(response)
 
         self.urlopen_patch.assert_called_with('images/right_image.jpg')
