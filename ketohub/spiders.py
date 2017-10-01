@@ -31,12 +31,17 @@ def _calculate_download_dir(start_time):
     return os.path.join(download_root, download_subdir)
 
 
+def _find_opengraph_image(response):
+    return response.xpath(
+        '/html/head/meta[@property="og:image"]/@content').extract_first()
+
+
 def find_ketoconnect_image_url(response):
-    return str(response.css('img')[1].xpath('@src').extract_first())
+    return _find_opengraph_image(response)
 
 
 def find_ruled_me_image_url(response):
-    return str(response.css('img').xpath('@src').extract_first())
+    return _find_opengraph_image(response)
 
 
 class CallbackHandler(object):

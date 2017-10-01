@@ -14,10 +14,9 @@ class FindKetoConnectImageUrlTest(unittest.TestCase):
                     url='https://www.foo.com',
                     request=http.Request('https://www.foo.com'),
                     body="""
-                    <html>
-                      <img src="images/foo.jpg" />
-                      <img src="images/correct_image.jpg" />
-                    </html>""")), 'images/correct_image.jpg')
+<html>
+  <meta property="og:image" content="https://mock.com/recipe-image.jpg" />
+</html>""")), 'https://mock.com/recipe-image.jpg')
 
 
 class FindRuledMeImageUrlTest(unittest.TestCase):
@@ -29,7 +28,6 @@ class FindRuledMeImageUrlTest(unittest.TestCase):
                     url='https://www.foo.com',
                     request=http.Request('https://www.foo.com'),
                     body="""
-                    <html>
-                      <img src="images/correct_image.jpg" />
-                      <img src="images/foo.jpg" />
-                    </html>""")), 'images/correct_image.jpg')
+<html>
+  <meta property="og:image" content="https://mock.com/recipe-image.jpg" />
+</html>""")), 'https://mock.com/recipe-image.jpg')
