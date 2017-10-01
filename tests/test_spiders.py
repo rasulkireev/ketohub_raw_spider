@@ -7,7 +7,7 @@ from ketohub import spiders
 
 class FindKetoConnectImageUrlTest(unittest.TestCase):
 
-    def test_finds_correct_image_on_simple_page(self):
+    def test_finds_image_from_opengraph(self):
         self.assertEqual(
             spiders.find_ketoconnect_image_url(
                 http.TextResponse(
@@ -16,6 +16,19 @@ class FindKetoConnectImageUrlTest(unittest.TestCase):
                     body="""
 <html>
   <meta property="og:image" content="https://mock.com/recipe-image.jpg" />
+</html>""")), 'https://mock.com/recipe-image.jpg')
+
+    def test_finds_image_when_opengraph_image_is_not_set(self):
+        self.assertEqual(
+            spiders.find_ketoconnect_image_url(
+                http.TextResponse(
+                    url='https://www.foo.com',
+                    request=http.Request('https://www.foo.com'),
+                    body="""
+<html>
+<div id="tve_editor">
+<img class="tve_image" alt="" style="width: 400px;" src="https://mock.com/recipe-image.jpg" width="400" height="600" data-attachment-id="9282">
+</div>
 </html>""")), 'https://mock.com/recipe-image.jpg')
 
     def test_raises_error_when_image_not_found(self):

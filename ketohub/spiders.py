@@ -44,6 +44,12 @@ def find_ketoconnect_image_url(response):
     opengraph_url = _find_opengraph_image(response)
     if opengraph_url:
         return opengraph_url
+
+    for image_url in response.xpath(
+            '//div[@id="tve_editor"]/img/@src').extract():
+        if image_url.endswith('.jpg'):
+            return image_url
+
     raise NoImageFound('Could not find image in source HTML: %s' % response.url)
 
 
