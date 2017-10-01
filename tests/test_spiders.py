@@ -27,7 +27,9 @@ class FindKetoConnectImageUrlTest(unittest.TestCase):
                     body="""
 <html>
 <div id="tve_editor">
+<span class="junk">
 <img class="tve_image" alt="" style="width: 400px;" src="https://mock.com/recipe-image.jpg" width="400" height="600" data-attachment-id="9282">
+</span>
 </div>
 </html>""")), 'https://mock.com/recipe-image.jpg')
 

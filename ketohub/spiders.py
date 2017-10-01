@@ -46,7 +46,7 @@ def find_ketoconnect_image_url(response):
         return opengraph_url
 
     for image_url in response.xpath(
-            '//div[@id="tve_editor"]/img/@src').extract():
+            '//div[@id="tve_editor"]//img/@src').extract():
         if image_url.endswith('.jpg'):
             return image_url
 
