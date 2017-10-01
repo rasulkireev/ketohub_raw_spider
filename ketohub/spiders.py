@@ -20,6 +20,10 @@ class MissingDownloadDirectory(Error):
     pass
 
 
+class NoImageFound(Error):
+    pass
+
+
 def _calculate_download_dir(start_time):
     download_root = conf.settings.get('DOWNLOAD_ROOT')
     if not download_root:
@@ -37,11 +41,17 @@ def _find_opengraph_image(response):
 
 
 def find_ketoconnect_image_url(response):
-    return _find_opengraph_image(response)
+    opengraph_url = _find_opengraph_image(response)
+    if opengraph_url:
+        return opengraph_url
+    raise NoImageFound('Could not find image in source HTML: %s' % response.url)
 
 
 def find_ruled_me_image_url(response):
-    return _find_opengraph_image(response)
+    opengraph_url = _find_opengraph_image(response)
+    if opengraph_url:
+        return opengraph_url
+    raise NoImageFound('Could not find image in source HTML: %s' % response.url)
 
 
 class CallbackHandler(object):
