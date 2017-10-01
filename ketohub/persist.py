@@ -21,16 +21,16 @@ class ContentSaver(object):
         self._root = root
         self._write_file_fn = write_file_fn
 
-    def save_metadata(self, metadata):
+    def save_metadata(self, key, metadata):
         self._write_file_fn(
-            self._output_path('metadata.json'),
+            self._output_path(key, 'metadata.json'),
             json.dumps(metadata, indent=4, separators=(',', ':')))
 
-    def save_recipe_html(self, recipe_html):
-        self._write_file_fn(self._output_path('index.html'), recipe_html)
+    def save_recipe_html(self, key, recipe_html):
+        self._write_file_fn(self._output_path(key, 'index.html'), recipe_html)
 
-    def save_main_image(self, main_image_data):
-        self._write_file_fn(self._output_path('main.jpg'), main_image_data)
+    def save_main_image(self, key, main_image_data):
+        self._write_file_fn(self._output_path(key, 'main.jpg'), main_image_data)
 
-    def _output_path(self, filename):
-        return os.path.join(self._root, filename)
+    def _output_path(self, key, filename):
+        return os.path.join(self._root, key, filename)
