@@ -71,7 +71,12 @@ class CallbackHandler(object):
 
     def process_callback(self, response):
         key = self._recipe_key_from_url_func(response.url)
-        self._content_saver.save_metadata(key, {'url': response.url})
+        self._content_saver.save_metadata(key, {
+            'url':
+            response.url,
+            'referer':
+            response.request.headers['Referer'],
+        })
         self._content_saver.save_recipe_html(key, response.text.encode('utf8'))
 
         image_url = self._find_image_url_func(response)
@@ -93,19 +98,23 @@ class KetoConnectSpider(spiders.CrawlSpider):
     start_urls = ['https://www.ketoconnect.net/recipes/']
 
     rules = [
-        # Extract links for food category pages ex: https://ketoconnect.net/recipes/desserts/
-        spiders.Rule(
-            linkextractors.LinkExtractor(allow=[
-                r'https://ketonnect.com/\w+(-\w+)+/',
-            ])),
-
-        # Extract links for the actual recipes
-        # ex: https://www.ketoconnect.net/recipe/spicy-cilantro-dressing/
+        # Extract links for food category pages,
+        # e.g. https://ketoconnect.net/desserts/
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=[r'https://www.ketoconnect.net/recipe/\w+(-\w+)+/']),
+                allow=r'https://www.ketoconnect.net/\w+(-\w+)*/$',
+                restrict_xpaths=
+                '//div[@id="tve_editor"]//span[@class="tve_custom_font_size rft"]'
+            )),
+
+        # Extract links for the actual recipes
+        # e.g. https://www.ketoconnect.net/recipe/spicy-cilantro-dressing/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://www.ketoconnect.net/recipe/\w+(-\w+)*/$',
+                restrict_xpaths='//div[@class="tve_post tve_post_width_4"]'),
             callback=callback_handler.process_callback,
-            follow=False)
+            follow=False),
     ]
 
 
@@ -123,23 +132,26 @@ class RuledMeSpider(spiders.CrawlSpider):
     start_urls = ['https://www.ruled.me/keto-recipes/']
 
     rules = [
-        # Extract links for food category pages ex: https://www.ruled.me/keto-recipes/breakfast/
+        # Extract links for food category pages,
+        # e.g. https://www.ruled.me/keto-recipes/breakfast/
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=[r'https://www.ruled.me/keto-recipes/\w+/'])),
+                allow=r'https://www.ruled.me/keto-recipes/\w+(-\w+)*/$',
+                restrict_xpaths='//div[@class="r-list"]')),
 
-        # Extract links for finding additional pages within food category pages
-        # ex: https://www.ruled.me/keto-recipes/dinner/page/2/
+        # Extract links for finding additional pages within food category pages,
+        # e.g. https://www.ruled.me/keto-recipes/dinner/page/2/
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=r'https://www.ruled.me/keto-recipes/\w+/page/\d+/')),
+                allow=r'https://www.ruled.me/keto-recipes/\w+(\w+)*/page/\d+/')
+        ),
 
-        # Extract links for the actual recipes
-        # ex: https://www.ruled.me/easy-keto-cordon-bleu/
+        # Extract links for the actual recipes,
+        # e.g. https://www.ruled.me/easy-keto-cordon-bleu/
         spiders.Rule(
-            linkextractors.LinkExtractor(allow=[
-                r'https://www.ruled.me/(\w+-)+\w+/',
-            ]),
+            linkextractors.LinkExtractor(
+                allow=r'https://www.ruled.me/(\w+-)+\w+/$',
+                restrict_xpaths='//div[@id="content"]'),
             callback=callback_handler.process_callback,
             follow=False)
     ]
