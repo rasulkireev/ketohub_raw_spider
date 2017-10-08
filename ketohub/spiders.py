@@ -1,6 +1,3 @@
-import datetime
-import os
-
 from scrapy import conf
 from scrapy import linkextractors
 from scrapy import spiders
@@ -24,15 +21,12 @@ class NoImageFound(Error):
     pass
 
 
-def _calculate_download_dir(start_time):
+def _get_download_root():
     download_root = conf.settings.get('DOWNLOAD_ROOT')
     if not download_root:
         raise MissingDownloadDirectory(
             'Make sure you\'re providing a download directory.')
-
-    download_subdir = start_time.strftime('%Y%m%dT%H%M%SZ')
-
-    return os.path.join(download_root, download_subdir)
+    return download_root
 
 
 def _find_opengraph_image(response):
@@ -88,8 +82,7 @@ class KetoConnectSpider(spiders.CrawlSpider):
     name = 'ketoconnect'
 
     callback_handler = CallbackHandler(
-        content_saver=persist.ContentSaver(
-            _calculate_download_dir(datetime.datetime.utcnow())),
+        content_saver=persist.ContentSaver(_get_download_root()),
         recipe_key_from_url_func=recipe_key.from_url,
         find_image_url_func=find_ketoconnect_image_url,
         image_download_data_func=images.download_data)
@@ -122,8 +115,7 @@ class RuledMeSpider(spiders.CrawlSpider):
     name = 'ruled-me'
 
     callback_handler = CallbackHandler(
-        content_saver=persist.ContentSaver(
-            _calculate_download_dir(datetime.datetime.utcnow())),
+        content_saver=persist.ContentSaver(_get_download_root()),
         recipe_key_from_url_func=recipe_key.from_url,
         find_image_url_func=find_ruled_me_image_url,
         image_download_data_func=images.download_data)
