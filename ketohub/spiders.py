@@ -30,7 +30,7 @@ def _calculate_download_dir(start_time):
         raise MissingDownloadDirectory(
             'Make sure you\'re providing a download directory.')
 
-    download_subdir = start_time.strftime('%Y%m%d/%H%M%SZ')
+    download_subdir = start_time.strftime('%Y%m%dT%H%M%SZ')
 
     return os.path.join(download_root, download_subdir)
 
