@@ -13,3 +13,5 @@ ROBOTSTXT_OBEY = True
 
 # Default location for the scraped data
 DOWNLOAD_ROOT = 'download_output/'
+
+DOWNLOAD_DELAY = 1.0
