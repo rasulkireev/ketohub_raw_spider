@@ -16,10 +16,6 @@ class MissingDownloadDirectory(Error):
     pass
 
 
-class NoImageFound(Error):
-    pass
-
-
 def _get_download_root():
     download_root = conf.settings.get('DOWNLOAD_ROOT')
     if not download_root:
