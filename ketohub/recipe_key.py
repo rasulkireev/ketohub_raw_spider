@@ -3,8 +3,10 @@ import re
 
 def from_url(url):
     """Converts a URL to a recipe key."""
-    # Strip out http:// or https:// prefix and www.
-    url = re.sub(r'http.://www\.', '', url)
+    # Strip out http:// or https:// prefix.
+    url = re.sub(r'^https?://', '', url)
+    # Strip out www subdomain.
+    url = re.sub(r'^www\.', '', url)
     # Strip trailing slash
     url = re.sub(r'/$', '', url)
     # Convert all characters to lowercase
