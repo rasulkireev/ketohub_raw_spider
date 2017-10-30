@@ -106,3 +106,26 @@ class RuledMeSpider(spiders.CrawlSpider):
             callback=callback_handler.process_callback,
             follow=False)
     ]
+
+
+class KetogasmSpider(spiders.CrawlSpider):
+    name = 'ketogasm'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()),
+        recipe_key_from_url_func=recipe_key.from_url)
+
+    allowed_domains = ['ketogasm.com']
+    start_urls = [
+        'https://ketogasm.com/recipe-index/?fwp_recipes_filters=recipe'
+    ]
+
+    rules = [
+        # Extract links for recipes.
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://ketogasm.com/.*/$',
+                restrict_xpaths='//div[@id="recipes-grid"]'),
+            callback=callback_handler.process_callback,
+            follow=False)
+    ]
