@@ -29,8 +29,5 @@ class ContentSaver(object):
     def save_recipe_html(self, key, recipe_html):
         self._write_file_fn(self._output_path(key, 'index.html'), recipe_html)
 
-    def save_main_image(self, key, main_image_data):
-        self._write_file_fn(self._output_path(key, 'main.jpg'), main_image_data)
-
     def _output_path(self, key, filename):
         return os.path.join(self._root, key, filename)
