@@ -6,6 +6,9 @@
 To run the spiders:
 
 ```bash
-scrapy crawl ketoconnect -s DOWNLOAD_ROOT=downloads/
-scrapy crawl ruled-me -s DOWNLOAD_ROOT=downloads/
+TIMESTAMP=$(date --iso-8601=seconds | sed -r 's/://g')
+OUTPUT_DIR="${HOME}/data/raw/${TIMESTAMP}/"
+scrapy crawl ketoconnect -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
+scrapy crawl ruled-me -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
+scrapy crawl ketogasm -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 ```
