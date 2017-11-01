@@ -129,3 +129,24 @@ class KetogasmSpider(spiders.CrawlSpider):
             callback=callback_handler.process_callback,
             follow=False)
     ]
+
+
+class KetoSizeMe(spiders.CrawlSpider):
+    name = 'keto-size-me'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()),
+        recipe_key_from_url_func=recipe_key.from_url)
+
+    allowed_domains = ['ketosizeme.com']
+    start_urls = ['https://ketosizeme.com/ketogenic-diet-recipes-index/']
+
+    rules = [
+        # Extract links for recipes.
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://ketosizeme.com/.*/$',
+                restrict_xpaths='//div[@class="entry-content"]'),
+            callback=callback_handler.process_callback,
+            follow=False)
+    ]
