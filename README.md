@@ -11,4 +11,5 @@ OUTPUT_DIR="${HOME}/data/raw/${TIMESTAMP}/"
 scrapy crawl ketoconnect -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl ruled-me -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl ketogasm -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
+scrapy crawl keto-size-me -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 ```
