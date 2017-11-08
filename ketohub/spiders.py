@@ -26,12 +26,11 @@ def _get_download_root():
 
 class CallbackHandler(object):
 
-    def __init__(self, content_saver, recipe_key_from_url_func):
+    def __init__(self, content_saver):
         self._content_saver = content_saver
-        self._recipe_key_from_url_func = recipe_key_from_url_func
 
     def process_callback(self, response):
-        key = self._recipe_key_from_url_func(response.url)
+        key = recipe_key.from_url(response.url)
         self._content_saver.save_metadata(key, {
             'url':
             response.url,
@@ -45,8 +44,7 @@ class KetoConnectSpider(spiders.CrawlSpider):
     name = 'ketoconnect'
 
     callback_handler = CallbackHandler(
-        content_saver=persist.ContentSaver(_get_download_root()),
-        recipe_key_from_url_func=recipe_key.from_url)
+        content_saver=persist.ContentSaver(_get_download_root()))
 
     allowed_domains = ['ketoconnect.net']
     start_urls = ['https://www.ketoconnect.net/recipes/']
@@ -76,8 +74,7 @@ class RuledMeSpider(spiders.CrawlSpider):
     name = 'ruled-me'
 
     callback_handler = CallbackHandler(
-        content_saver=persist.ContentSaver(_get_download_root()),
-        recipe_key_from_url_func=recipe_key.from_url)
+        content_saver=persist.ContentSaver(_get_download_root()))
 
     allowed_domains = ['ruled.me']
     start_urls = ['https://www.ruled.me/keto-recipes/']
@@ -112,8 +109,7 @@ class KetogasmSpider(spiders.CrawlSpider):
     name = 'ketogasm'
 
     callback_handler = CallbackHandler(
-        content_saver=persist.ContentSaver(_get_download_root()),
-        recipe_key_from_url_func=recipe_key.from_url)
+        content_saver=persist.ContentSaver(_get_download_root()))
 
     allowed_domains = ['ketogasm.com']
     start_urls = [
@@ -135,8 +131,7 @@ class KetoSizeMe(spiders.CrawlSpider):
     name = 'keto-size-me'
 
     callback_handler = CallbackHandler(
-        content_saver=persist.ContentSaver(_get_download_root()),
-        recipe_key_from_url_func=recipe_key.from_url)
+        content_saver=persist.ContentSaver(_get_download_root()))
 
     allowed_domains = ['ketosizeme.com']
     start_urls = ['https://ketosizeme.com/ketogenic-diet-recipes-index/']
