@@ -12,4 +12,5 @@ scrapy crawl ketoconnect -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl ruled-me -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl ketogasm -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl keto-size-me -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
+scrapy crawl queen-bs -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 ```

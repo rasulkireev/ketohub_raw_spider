@@ -145,3 +145,32 @@ class KetoSizeMe(spiders.CrawlSpider):
             callback=callback_handler.process_callback,
             follow=False)
     ]
+
+
+class QueenBs(spiders.CrawlSpider):
+    name = 'queen-bs'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['queenbsincredibleedibles.com']
+    start_urls = ['http://queenbsincredibleedibles.com/category/keto/page/1/']
+
+    rules = [
+        # Extract links for finding additional keto recipe pages,
+        # e.g. http://queenbsincredibleedibles.com/category/keto/page/2/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=
+                r'http://queenbsincredibleedibles.com/category/keto/page/\d+/')
+        ),
+
+        # Extract links for recipes,
+        # e.g. http://queenbsincredibleedibles.com/2017/09/26/creamy-coconut-kale-sausage-soup/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=
+                r'http://queenbsincredibleedibles.com/\d{4}/\d{2}/\d{2}/.*/$'),
+            callback=callback_handler.process_callback,
+            follow=False)
+    ]
