@@ -170,7 +170,8 @@ class QueenBs(spiders.CrawlSpider):
         spiders.Rule(
             linkextractors.LinkExtractor(
                 allow=
-                r'http://queenbsincredibleedibles.com/\d{4}/\d{2}/\d{2}/.*/$'),
+                r'http://queenbsincredibleedibles.com/\d{4}/\d{2}/\d{2}/.*/$',
+                deny=r'ive-fallen-in-love-with-keto'),
             callback=callback_handler.process_callback,
             follow=False)
     ]
