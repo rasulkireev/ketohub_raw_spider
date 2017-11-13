@@ -147,6 +147,43 @@ class KetoSizeMe(spiders.CrawlSpider):
     ]
 
 
+class KetovangelistKitchen(spiders.CrawlSpider):
+    name = 'ketovangelist-kitchen'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['ketovangelistkitchen.com']
+    # Organize start URLs in descending order of category strength (e.g. muffins
+    # should be categorized as "snack" not "eggs".
+    start_urls = [
+        'http://www.ketovangelistkitchen.com/category/appetizers/',
+        'http://www.ketovangelistkitchen.com/category/sides/',
+        'http://www.ketovangelistkitchen.com/category/snack/',
+        'http://www.ketovangelistkitchen.com/category/soup/',
+        'http://www.ketovangelistkitchen.com/category/sauces-dressings/',
+        'http://www.ketovangelistkitchen.com/category/fat-bombs/',
+        'http://www.ketovangelistkitchen.com/category/baked-goods/',
+        'http://www.ketovangelistkitchen.com/category/beef/',
+        'http://www.ketovangelistkitchen.com/category/chicken-turkey/',
+        'http://www.ketovangelistkitchen.com/category/chocolate/',
+        'http://www.ketovangelistkitchen.com/category/fish/',
+        'http://www.ketovangelistkitchen.com/category/pork/',
+        'http://www.ketovangelistkitchen.com/category/nuts/',
+        'http://www.ketovangelistkitchen.com/category/eggs/',
+    ]
+
+    rules = [
+        # Extract links for recipes.
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'http://(www.)?ketovangelistkitchen.com/.+/$',
+                restrict_xpaths='//div[@class="entry-content"]'),
+            callback=callback_handler.process_callback,
+            follow=False)
+    ]
+
+
 class QueenBs(spiders.CrawlSpider):
     name = 'queen-bs'
 
