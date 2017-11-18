@@ -60,7 +60,9 @@ class HeyKetoMamaSpider(spiders.CrawlSpider):
         # e.g. https://www.heyketomama.com/ten-minute-keto-nachos/
         spiders.Rule(
             linkextractors.LinkExtractor(
-                restrict_xpaths='//div[@class="entry-content"]')),
+                restrict_xpaths='//div[@class="entry-content"]'),
+            callback=callback_handler.process_callback,
+            follow=False),
     ]
 
 
