@@ -40,6 +40,32 @@ class CallbackHandler(object):
         self._content_saver.save_recipe_html(key, response.text.encode('utf8'))
 
 
+class HeyKetoMamaSpider(spiders.CrawlSpider):
+    name = 'hey-keto-mama'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['heyketomama.com']
+    start_urls = ['https://www.heyketomama.com/category/recipes/page/1/']
+
+    rules = [
+        # Extract links for finding additional recipe pages,
+        # e.g. https://www.heyketomama.com/category/recipes/page/6/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://www.heyketomama.com/category/recipes/page/\d+/')
+        ),
+        # Extract links for recipes,
+        # e.g. https://www.heyketomama.com/ten-minute-keto-nachos/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                restrict_xpaths='//div[@class="entry-content"]'),
+            callback=callback_handler.process_callback,
+            follow=False),
+    ]
+
+
 class KetoConnectSpider(spiders.CrawlSpider):
     name = 'ketoconnect'
 
