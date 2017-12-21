@@ -210,6 +210,31 @@ class KetovangelistKitchen(spiders.CrawlSpider):
     ]
 
 
+class LowCarbYum(spiders.CrawlSpider):
+    name = 'low-carb-yum'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['lowcarbyum.com']
+    start_urls = ['https://lowcarbyum.com/recipes/']
+
+    rules = [
+        # Extract links for food category pages,
+        # e.g. https://lowcarbyum.com/category/desserts/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://lowcarbyum.com/category/\w+(-\w+)*/$')),
+        # Extract links for recipes.
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://lowcarbyum.com/.+/$',
+                restrict_xpaths='//header[@class="entry-header"]'),
+            callback=callback_handler.process_callback,
+            follow=False)
+    ]
+
+
 class QueenBs(spiders.CrawlSpider):
     name = 'queen-bs'
 
