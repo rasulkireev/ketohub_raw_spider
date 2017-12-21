@@ -9,10 +9,11 @@ To run the spiders:
 TIMESTAMP=$(date --iso-8601=seconds | sed -r 's/://g')
 OUTPUT_DIR="${HOME}/data/raw/${TIMESTAMP}/"
 scrapy crawl hey-keto-mama -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
-scrapy crawl ketoconnect -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
-scrapy crawl ruled-me -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
-scrapy crawl ketogasm -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl keto-size-me -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
-scrapy crawl queen-bs -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
+scrapy crawl ketoconnect -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
+scrapy crawl ketogasm -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl ketovangelist-kitchen -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
+scrapy crawl low-carb-yum -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
+scrapy crawl queen-bs -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
+scrapy crawl ruled-me -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 ```
