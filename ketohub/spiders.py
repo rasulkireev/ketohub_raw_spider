@@ -257,8 +257,7 @@ class QueenBs(spiders.CrawlSpider):
         # e.g. http://queenbsincredibleedibles.com/creamy-coconut-kale-sausage-soup/
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=
-                r'http://queenbsincredibleedibles.com/.*/$',
+                allow=r'http://queenbsincredibleedibles.com/.*/$',
                 deny=r'ive-fallen-in-love-with-keto'),
             callback=callback_handler.process_callback,
             follow=False)
