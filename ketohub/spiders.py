@@ -254,11 +254,10 @@ class QueenBs(spiders.CrawlSpider):
         ),
 
         # Extract links for recipes,
-        # e.g. http://queenbsincredibleedibles.com/2017/09/26/creamy-coconut-kale-sausage-soup/
+        # e.g. http://queenbsincredibleedibles.com/creamy-coconut-kale-sausage-soup/
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=
-                r'http://queenbsincredibleedibles.com/\d{4}/\d{2}/\d{2}/.*/$',
+                allow=r'http://queenbsincredibleedibles.com/.*/$',
                 deny=r'ive-fallen-in-love-with-keto'),
             callback=callback_handler.process_callback,
             follow=False)
