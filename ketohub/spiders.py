@@ -262,3 +262,24 @@ class QueenBs(spiders.CrawlSpider):
             callback=callback_handler.process_callback,
             follow=False)
     ]
+
+
+class YourFriendsJ(spiders.CrawlSpider):
+    name = 'your-friends-j'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['yourfriendsj.com']
+    start_urls = ['http://yourfriendsj.com/category/keto/']
+
+    rules = [
+        # Extract links for recipes,
+        # e.g. http://yourfriendsj.com/easy-guacamole-recipe/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'http://yourfriendsj.com/[^\/]*/$',
+                restrict_xpaths='//div[@class="post-content"]'),
+            callback=callback_handler.process_callback,
+            follow=False)
+    ]

@@ -16,4 +16,5 @@ scrapy crawl ketovangelist-kitchen -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl low-carb-yum -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl queen-bs -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl ruled-me -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
+scrapy crawl your-friends-j -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 ```
