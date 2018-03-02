@@ -24,4 +24,4 @@ pyflakes $(find ./ -type f -name '*.py' | xargs)
 
 # Check docstrings for style consistency.
 PYTHONPATH=$PYTHONPATH:$(pwd)/third_party/docstringchecker \
-  pylint --reports=n ketohub tests
+  pylint --reports=n --rcfile=.pylintrc ketohub tests
