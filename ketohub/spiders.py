@@ -258,7 +258,7 @@ class QueenBs(spiders.CrawlSpider):
         spiders.Rule(
             linkextractors.LinkExtractor(
                 allow=r'http://queenbsincredibleedibles.com/.*/$',
-                deny=r'ive-fallen-in-love-with-keto'),
+                deny=r'(category\/)|(ive-fallen-in-love-with-keto)'),
             callback=callback_handler.process_callback,
             follow=False)
     ]
