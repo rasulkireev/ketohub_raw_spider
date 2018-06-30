@@ -31,12 +31,11 @@ class CallbackHandler(object):
 
     def process_callback(self, response):
         key = recipe_key.from_url(response.url)
-        self._content_saver.save_metadata(key, {
-            'url':
-            response.url,
-            'referer':
-            response.request.headers['Referer'],
-        })
+        self._content_saver.save_metadata(
+            key, {
+                'url': response.url,
+                'referer': response.request.headers['Referer'],
+            })
         self._content_saver.save_recipe_html(key, response.text.encode('utf8'))
 
 
