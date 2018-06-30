@@ -2,8 +2,8 @@
 astroid==1.3.8
 coverage
 mock
-pyflakes==1.6.0
+pyflakes==2.0.0
 # We use pylint exclusively to run the DocStringChecker linter and that linter
 # expects pre-1.5.0 pylint syntax.
 pylint==1.4.4
-yapf==0.17.0
+yapf==0.22.0
