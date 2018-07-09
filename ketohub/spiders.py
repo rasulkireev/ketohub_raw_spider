@@ -209,6 +209,31 @@ class KetovangelistKitchen(spiders.CrawlSpider):
     ]
 
 
+class Ketovale(spiders.CrawlSpider):
+    name = 'ketovale'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['ketovale.com']
+    start_urls = ['https://www.ketovale.com/category/recipes/']
+
+    rules = [
+        # Extract links for finding additional recipe pages,
+        # e.g. https://www.ketovale.com/category/recipes/page/3/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://www.ketovale.com/category/recipes/page/\d+/')),
+        # Extract links for recipes.
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://www.ketovale.com/recipe/.*/$',
+                restrict_xpaths='//h2[@class="entry-title"]'),
+            callback=callback_handler.process_callback,
+            follow=False),
+    ]
+
+
 class LowCarbYum(spiders.CrawlSpider):
     name = 'low-carb-yum'
 
