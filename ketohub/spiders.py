@@ -159,16 +159,24 @@ class KetoSizeMe(spiders.CrawlSpider):
         content_saver=persist.ContentSaver(_get_download_root()))
 
     allowed_domains = ['ketosizeme.com']
-    start_urls = ['https://ketosizeme.com/ketogenic-diet-recipes-index/']
+    start_urls = ['https://ketosizeme.com/category/ketogenic-diet-recipes/']
 
     rules = [
+
+        # Extract links for finding additional pages within recipe index,
+        # e.g. https://ketosizeme.com/category/ketogenic-diet-recipes/page/2/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=
+                r'https://ketosizeme.com/category/ketogenic-diet-recipes/page/\d+/'
+            )),
+
         # Extract links for recipes.
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=r'https://ketosizeme.com/.*/$',
-                restrict_xpaths='//div[@class="entry-content"]'),
+                allow=r'https://ketosizeme.com/.+/$', restrict_xpaths='//main'),
             callback=callback_handler.process_callback,
-            follow=False)
+            follow=False),
     ]
 
 
