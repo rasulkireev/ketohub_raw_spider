@@ -296,6 +296,32 @@ class QueenBs(spiders.CrawlSpider):
     ]
 
 
+class SugarFreeMom(spiders.CrawlSpider):
+    name = 'sugar-free-mom'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['sugarfreemom.com']
+    start_urls = ['https://www.sugarfreemom.com/recipes/category/diet/keto/']
+
+    rules = [
+        # Extract links for finding additional recipe pages,
+        # e.g. https://www.sugarfreemom.com/recipes/category/diet/keto/page/2/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=(
+                    r'sugarfreemom.com/recipes/category/diet/keto/page/\d+/'))),
+        # Extract links for recipes.
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'sugarfreemom.com/recipes/[^\/]+/$',
+                restrict_xpaths='//main'),
+            callback=callback_handler.process_callback,
+            follow=False),
+    ]
+
+
 class WholesomeYum(spiders.CrawlSpider):
     name = 'wholesome-yum'
 
