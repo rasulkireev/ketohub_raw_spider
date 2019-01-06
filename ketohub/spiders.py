@@ -296,6 +296,30 @@ class QueenBs(spiders.CrawlSpider):
     ]
 
 
+class WholesomeYum(spiders.CrawlSpider):
+    name = 'wholesome-yum'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['wholesomeyum.com']
+    start_urls = ['https://www.wholesomeyum.com/tag/keto/']
+
+    rules = [
+        # Extract links for finding additional recipe pages,
+        # e.g. https://www.wholesomeyum.com/tag/keto/page/2/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'wholesomeyum.com/tag/keto/page/\d+/')),
+        # Extract links for recipes.
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'wholesomeyum.com/.+/$', restrict_xpaths='//main'),
+            callback=callback_handler.process_callback,
+            follow=False),
+    ]
+
+
 class YourFriendsJ(spiders.CrawlSpider):
     name = 'your-friends-j'
 
