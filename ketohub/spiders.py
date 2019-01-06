@@ -314,7 +314,11 @@ class WholesomeYum(spiders.CrawlSpider):
         # Extract links for recipes.
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=r'wholesomeyum.com/.+/$', restrict_xpaths='//main'),
+                allow=[
+                    r'wholesomeyum.com/[^\/]+/$',
+                    r'wholesomeyum.com/recipes/[^\/]+/$'
+                ],
+                restrict_xpaths='//main'),
             callback=callback_handler.process_callback,
             follow=False),
     ]
