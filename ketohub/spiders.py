@@ -296,6 +296,33 @@ class QueenBs(spiders.CrawlSpider):
     ]
 
 
+class SkinnyTaste(spiders.CrawlSpider):
+    name = 'skinny-taste'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['skinnytaste.com']
+    start_urls = ['https://www.skinnytaste.com/recipes/keto/']
+
+    rules = [
+        # Extract links for finding additional recipe pages,
+        # e.g. https://www.skinnytaste.com/recipes/keto/page/2/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'skinnytaste.com/recipes/keto/page/\d+/')),
+        # Extract links for recipes.
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=[
+                    r'skinnytaste.com/[^\/]+/$',
+                ],
+                restrict_xpaths='//div[@class="archives"]'),
+            callback=callback_handler.process_callback,
+            follow=False),
+    ]
+
+
 class SugarFreeMom(spiders.CrawlSpider):
     name = 'sugar-free-mom'
 
