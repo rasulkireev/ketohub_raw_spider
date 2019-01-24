@@ -109,21 +109,22 @@ class RuledMeSpider(spiders.CrawlSpider):
         # e.g. https://www.ruled.me/keto-recipes/breakfast/
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=r'https://www.ruled.me/keto-recipes/\w+(-\w+)*/$',
+                allow=r'https://www.ruled.me/keto-recipes/\w+(\-\w+)*/$',
                 restrict_xpaths='//div[@class="r-list"]')),
 
         # Extract links for finding additional pages within food category pages,
         # e.g. https://www.ruled.me/keto-recipes/dinner/page/2/
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=r'https://www.ruled.me/keto-recipes/\w+(\w+)*/page/\d+/')
+                allow=(
+                    r'https://www.ruled.me/keto-recipes/\w+(\-\w+)*/page/\d+/'))
         ),
 
         # Extract links for the actual recipes,
         # e.g. https://www.ruled.me/easy-keto-cordon-bleu/
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=r'https://www.ruled.me/(\w+-)+\w+/$',
+                allow=r'https://www.ruled.me/\w+(\-\w+)*/$',
                 restrict_xpaths='//div[@id="content"]'),
             callback=callback_handler.process_callback,
             follow=False)
