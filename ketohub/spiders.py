@@ -39,6 +39,32 @@ class CallbackHandler(object):
         self._content_saver.save_recipe_html(key, response.text.encode('utf8'))
 
 
+class GreekGoesKetoSpider(spiders.CrawlSpider):
+    name = 'greek-goes-keto'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['greekgoesketo.com']
+    start_urls = ['https://greekgoesketo.com/category/recipes/']
+
+    rules = [
+        # Extract links for finding additional recipe pages,
+        # e.g. https://greekgoesketo.com/category/recipes/page/1/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://greekgoesketo.com/category/recipes/page/\d+/')),
+        # Extract links for recipes,
+        # e.g. https://www.heyketomama.com/ten-minute-keto-nachos/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://greekgoesketo.com/\d{4}/\d{2}/\d{2}/.+/',
+                restrict_xpaths='//div[@class="content-block"]'),
+            callback=callback_handler.process_callback,
+            follow=False),
+    ]
+
+
 class HeyKetoMamaSpider(spiders.CrawlSpider):
     name = 'hey-keto-mama'
 
