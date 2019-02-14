@@ -98,24 +98,20 @@ class KetoConnectSpider(spiders.CrawlSpider):
         content_saver=persist.ContentSaver(_get_download_root()))
 
     allowed_domains = ['ketoconnect.net']
-    start_urls = ['https://www.ketoconnect.net/recipes/']
+    start_urls = [
+        'https://www.ketoconnect.net/main-dishes/',
+        'https://www.ketoconnect.net/side-dishes/',
+        'https://www.ketoconnect.net/breakfasts/',
+        'https://www.ketoconnect.net/snacks/',
+        'https://www.ketoconnect.net/desserts/',
+        'https://www.ketoconnect.net/beverages/'
+    ]
 
     rules = [
-        # Extract links for food category pages,
-        # e.g. https://ketoconnect.net/desserts/
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'https://www.ketoconnect.net/\w+(-\w+)*/$',
-                restrict_xpaths=
-                '//div[@id="tve_editor"]//span[@class="tve_custom_font_size rft"]'
-            )),
-
         # Extract links for the actual recipes
         # e.g. https://www.ketoconnect.net/recipe/spicy-cilantro-dressing/
         spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'https://www.ketoconnect.net/recipe/\w+(-\w+)*/$',
-                restrict_xpaths='//div[@class="tve_post tve_post_width_4"]'),
+            linkextractors.LinkExtractor(restrict_xpaths='//article'),
             callback=callback_handler.process_callback,
             follow=False),
     ]
