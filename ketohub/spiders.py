@@ -413,11 +413,17 @@ class YourFriendsJ(spiders.CrawlSpider):
         content_saver=persist.ContentSaver(_get_download_root()))
 
     allowed_domains = ['yourfriendsj.com']
-    start_urls = ['http://yourfriendsj.com/recipes/']
+    start_urls = ['http://yourfriendsj.com/recipe-library/']
 
     rules = [
+
+        # Extract links for finding additional recipe pages,
+        # e.g. http://yourfriendsj.com/tag/keto/page/2/
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'yourfriendsj.com/recipe-library/\?paged=\d+')),
         # Extract links for recipes,
-        # e.g. http://yourfriendsj.com/easy-guacamole-recipe/
+        # e.g. http://yourfriendsj.com/recipes/easy-guacamole-recipe/
         spiders.Rule(
             linkextractors.LinkExtractor(
                 allow=r'http://yourfriendsj.com/recipes/[^\/]*/$',
