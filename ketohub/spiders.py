@@ -161,10 +161,9 @@ class KetogasmSpider(spiders.CrawlSpider):
         content_saver=persist.ContentSaver(_get_download_root()))
 
     allowed_domains = ['ketogasm.com']
-    _url_format = (
-        'https://ketogasm.com/recipe-index/?'
-        'fwp_recipes_filters=recipe&'
-        'fwp_paged=%d')
+    _url_format = ('https://ketogasm.com/recipe-index/?'
+                   'fwp_recipes_filters=recipe&'
+                   'fwp_paged=%d')
     start_urls = [
         (_url_format % 1),
         (_url_format % 2),
