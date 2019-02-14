@@ -220,27 +220,32 @@ class KetovangelistKitchen(spiders.CrawlSpider):
     # Organize start URLs in descending order of category strength (e.g. muffins
     # should be categorized as "snack" not "eggs".
     start_urls = [
-        'http://www.ketovangelistkitchen.com/category/appetizers/',
-        'http://www.ketovangelistkitchen.com/category/sides/',
-        'http://www.ketovangelistkitchen.com/category/snack/',
-        'http://www.ketovangelistkitchen.com/category/soup/',
-        'http://www.ketovangelistkitchen.com/category/sauces-dressings/',
-        'http://www.ketovangelistkitchen.com/category/fat-bombs/',
-        'http://www.ketovangelistkitchen.com/category/baked-goods/',
-        'http://www.ketovangelistkitchen.com/category/beef/',
-        'http://www.ketovangelistkitchen.com/category/chicken-turkey/',
-        'http://www.ketovangelistkitchen.com/category/chocolate/',
-        'http://www.ketovangelistkitchen.com/category/fish/',
-        'http://www.ketovangelistkitchen.com/category/pork/',
-        'http://www.ketovangelistkitchen.com/category/nuts/',
-        'http://www.ketovangelistkitchen.com/category/eggs/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/appetizers/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/desserts/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/beverages/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/sides/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/snack/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/soup/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/sauces-dressings/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/casseroles/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/fat-bombs/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/dairy-free/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/kid-friendly/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/baked-goods/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/beef/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/chicken-turkey/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/chocolate/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/fish/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/pork/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/vegetables/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/nuts/',
+        'http://www.ketovangelistkitchen.com/indexes/recipes/eggs/',
     ]
 
     rules = [
         # Extract links for recipes.
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=r'http://(www.)?ketovangelistkitchen.com/.+/$',
                 restrict_xpaths='//div[@class="entry-content"]'),
             callback=callback_handler.process_callback,
             follow=False)
