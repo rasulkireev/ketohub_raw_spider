@@ -153,6 +153,7 @@ class RuledMeSpider(spiders.CrawlSpider):
     ]
 
 
+# Note: This site seems to have stopped publishing on 2018-06-15.
 class KetogasmSpider(spiders.CrawlSpider):
     name = 'ketogasm'
 
@@ -160,8 +161,15 @@ class KetogasmSpider(spiders.CrawlSpider):
         content_saver=persist.ContentSaver(_get_download_root()))
 
     allowed_domains = ['ketogasm.com']
+    _url_format = (
+        'https://ketogasm.com/recipe-index/?'
+        'fwp_recipes_filters=recipe&'
+        'fwp_paged=%d')
     start_urls = [
-        'https://ketogasm.com/recipe-index/?fwp_recipes_filters=recipe'
+        (_url_format % 1),
+        (_url_format % 2),
+        (_url_format % 3),
+        (_url_format % 4),
     ]
 
     rules = [
