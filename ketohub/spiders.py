@@ -283,7 +283,9 @@ class LowCarbYum(spiders.CrawlSpider):
         # e.g. https://lowcarbyum.com/category/desserts/
         spiders.Rule(
             linkextractors.LinkExtractor(
-                allow=r'https://lowcarbyum.com/category/\w+(-\w+)*/$')),
+                allow=r'https://lowcarbyum.com/category/',
+                deny=r'https://lowcarbyum.com/category/((reviews)|(articles))')
+        ),
         # Extract links for recipes.
         spiders.Rule(
             linkextractors.LinkExtractor(
