@@ -8,6 +8,7 @@ To run the spiders:
 ```bash
 TIMESTAMP=$(date --iso-8601=seconds | sed -r 's/://g')
 OUTPUT_DIR="${HOME}/data/raw/${TIMESTAMP}/"
+scrapy crawl diet-doctor -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl greek-goes-keto -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl hey-keto-mama -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
 scrapy crawl keto-diet-app -s "DOWNLOAD_ROOT=${OUTPUT_DIR}"
