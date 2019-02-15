@@ -117,6 +117,23 @@ class KetoConnectSpider(spiders.CrawlSpider):
     ]
 
 
+class KetoDietAppSpider(spiders.SitemapSpider):
+    name = 'keto-diet-app'
+
+    sitemap_urls = [
+        'https://ketodietapp.com/Blog/sitemap.axd',
+    ]
+
+    sitemap_rules = [
+        ('/Blog/lchf/', 'parse_recipe'),
+    ]
+
+    def parse_recipe(self, response):
+        callback_handler = CallbackHandler(
+            content_saver=persist.ContentSaver(_get_download_root()))
+        callback_handler.process_callback(response)
+
+
 class RuledMeSpider(spiders.CrawlSpider):
     name = 'ruled-me'
 
