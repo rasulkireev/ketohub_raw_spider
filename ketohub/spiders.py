@@ -39,6 +39,32 @@ class CallbackHandler(object):
         self._content_saver.save_recipe_html(key, response.text.encode('utf8'))
 
 
+class DietDoctorSpider(spiders.CrawlSpider):
+    name = 'diet-doctor'
+
+    callback_handler = CallbackHandler(
+        content_saver=persist.ContentSaver(_get_download_root()))
+
+    allowed_domains = ['dietdoctor.com']
+
+    # TODO(mtlynch): Make this more flexible. It's now limited to only 40 pages
+    # but it should just figure out which ones are present. I've adding Rules
+    # for the Previous/Next links but they don't seem to work.
+    _url_prefix = ('https://www.dietdoctor.com/low-carb/recipes'
+                   '?s=&st=recipe&lowcarb%5B%5D=keto&sp=')
+    start_urls = [_url_prefix + str(i) for i in range(1, 40)]
+
+    rules = [
+        # Extract links for recipes,
+        # e.g. /recipes/green-onion-no-chile-chicken-enchiladas
+        spiders.Rule(
+            linkextractors.LinkExtractor(
+                allow=r'https://www.dietdoctor.com/recipes/'),
+            callback=callback_handler.process_callback,
+            follow=False),
+    ]
+
+
 class GreekGoesKetoSpider(spiders.CrawlSpider):
     name = 'greek-goes-keto'
 
