@@ -57,11 +57,10 @@ class DietDoctorSpider(spiders.CrawlSpider):
     rules = [
         # Extract links for recipes,
         # e.g. /recipes/green-onion-no-chile-chicken-enchiladas
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'https://www.dietdoctor.com/recipes/'),
-            callback=callback_handler.process_callback,
-            follow=False),
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=r'https://www.dietdoctor.com/recipes/'),
+                     callback=callback_handler.process_callback,
+                     follow=False),
     ]
 
 
@@ -82,12 +81,11 @@ class GreekGoesKetoSpider(spiders.CrawlSpider):
                 allow=r'https://greekgoesketo.com/category/recipes/page/\d+/')),
         # Extract links for recipes,
         # e.g. https://www.heyketomama.com/ten-minute-keto-nachos/
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'https://greekgoesketo.com/\d{4}/\d{2}/\d{2}/.+/',
-                restrict_xpaths='//div[@class="content-block"]'),
-            callback=callback_handler.process_callback,
-            follow=False),
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=r'https://greekgoesketo.com/\d{4}/\d{2}/\d{2}/.+/',
+            restrict_xpaths='//div[@class="content-block"]'),
+                     callback=callback_handler.process_callback,
+                     follow=False),
     ]
 
 
@@ -109,11 +107,10 @@ class HeyKetoMamaSpider(spiders.CrawlSpider):
         ),
         # Extract links for recipes,
         # e.g. https://www.heyketomama.com/ten-minute-keto-nachos/
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                restrict_xpaths='//div[@class="entry-content"]'),
-            callback=callback_handler.process_callback,
-            follow=False),
+        spiders.Rule(linkextractors.LinkExtractor(
+            restrict_xpaths='//div[@class="entry-content"]'),
+                     callback=callback_handler.process_callback,
+                     follow=False),
     ]
 
 
@@ -136,10 +133,9 @@ class KetoConnectSpider(spiders.CrawlSpider):
     rules = [
         # Extract links for the actual recipes
         # e.g. https://www.ketoconnect.net/recipe/spicy-cilantro-dressing/
-        spiders.Rule(
-            linkextractors.LinkExtractor(restrict_xpaths='//article'),
-            callback=callback_handler.process_callback,
-            follow=False),
+        spiders.Rule(linkextractors.LinkExtractor(restrict_xpaths='//article'),
+                     callback=callback_handler.process_callback,
+                     follow=False),
     ]
 
 
@@ -180,19 +176,16 @@ class RuledMeSpider(spiders.CrawlSpider):
         # Extract links for finding additional pages within food category pages,
         # e.g. https://www.ruled.me/keto-recipes/dinner/page/2/
         spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=(
-                    r'https://www.ruled.me/keto-recipes/\w+(\-\w+)*/page/\d+/'))
-        ),
+            linkextractors.LinkExtractor(allow=(
+                r'https://www.ruled.me/keto-recipes/\w+(\-\w+)*/page/\d+/'))),
 
         # Extract links for the actual recipes,
         # e.g. https://www.ruled.me/easy-keto-cordon-bleu/
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'https://www.ruled.me/\w+(\-\w+)*/$',
-                restrict_xpaths='//div[@id="content"]'),
-            callback=callback_handler.process_callback,
-            follow=False)
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=r'https://www.ruled.me/\w+(\-\w+)*/$',
+            restrict_xpaths='//div[@id="content"]'),
+                     callback=callback_handler.process_callback,
+                     follow=False)
     ]
 
 
@@ -216,12 +209,11 @@ class KetogasmSpider(spiders.CrawlSpider):
 
     rules = [
         # Extract links for recipes.
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'https://ketogasm.com/.*/$',
-                restrict_xpaths='//div[@id="recipes-grid"]'),
-            callback=callback_handler.process_callback,
-            follow=False)
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=r'https://ketogasm.com/.*/$',
+            restrict_xpaths='//div[@id="recipes-grid"]'),
+                     callback=callback_handler.process_callback,
+                     follow=False)
     ]
 
 
@@ -245,11 +237,10 @@ class KetoSizeMe(spiders.CrawlSpider):
             )),
 
         # Extract links for recipes.
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'https://ketosizeme.com/.+/$', restrict_xpaths='//main'),
-            callback=callback_handler.process_callback,
-            follow=False),
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=r'https://ketosizeme.com/.+/$', restrict_xpaths='//main'),
+                     callback=callback_handler.process_callback,
+                     follow=False),
     ]
 
 
@@ -287,11 +278,10 @@ class KetovangelistKitchen(spiders.CrawlSpider):
 
     rules = [
         # Extract links for recipes.
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                restrict_xpaths='//div[@class="entry-content"]'),
-            callback=callback_handler.process_callback,
-            follow=False)
+        spiders.Rule(linkextractors.LinkExtractor(
+            restrict_xpaths='//div[@class="entry-content"]'),
+                     callback=callback_handler.process_callback,
+                     follow=False)
     ]
 
 
@@ -311,12 +301,11 @@ class Ketovale(spiders.CrawlSpider):
             linkextractors.LinkExtractor(
                 allow=r'https://www.ketovale.com/category/recipes/page/\d+/')),
         # Extract links for recipes.
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'https://www.ketovale.com/recipe/.*/$',
-                restrict_xpaths='//h2[@class="entry-title"]'),
-            callback=callback_handler.process_callback,
-            follow=False),
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=r'https://www.ketovale.com/recipe/.*/$',
+            restrict_xpaths='//h2[@class="entry-title"]'),
+                     callback=callback_handler.process_callback,
+                     follow=False),
     ]
 
 
@@ -338,12 +327,11 @@ class LowCarbYum(spiders.CrawlSpider):
                 deny=r'https://lowcarbyum.com/category/((reviews)|(articles))')
         ),
         # Extract links for recipes.
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'https://lowcarbyum.com/.+/$',
-                restrict_xpaths='//header[@class="entry-header"]'),
-            callback=callback_handler.process_callback,
-            follow=False)
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=r'https://lowcarbyum.com/.+/$',
+            restrict_xpaths='//header[@class="entry-header"]'),
+                     callback=callback_handler.process_callback,
+                     follow=False)
     ]
 
 
@@ -367,12 +355,11 @@ class QueenBs(spiders.CrawlSpider):
 
         # Extract links for recipes,
         # e.g. http://queenbsincredibleedibles.com/creamy-coconut-kale-sausage-soup/
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'http://queenbsincredibleedibles.com/.*/$',
-                deny=r'(category\/)|(ive-fallen-in-love-with-keto)'),
-            callback=callback_handler.process_callback,
-            follow=False)
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=r'http://queenbsincredibleedibles.com/.*/$',
+            deny=r'(category\/)|(ive-fallen-in-love-with-keto)'),
+                     callback=callback_handler.process_callback,
+                     follow=False)
     ]
 
 
@@ -392,14 +379,13 @@ class SkinnyTaste(spiders.CrawlSpider):
             linkextractors.LinkExtractor(
                 allow=r'skinnytaste.com/recipes/keto/page/\d+/')),
         # Extract links for recipes.
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=[
-                    r'skinnytaste.com/[^\/]+/$',
-                ],
-                restrict_xpaths='//div[@class="archives"]'),
-            callback=callback_handler.process_callback,
-            follow=False),
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=[
+                r'skinnytaste.com/[^\/]+/$',
+            ],
+            restrict_xpaths='//div[@class="archives"]'),
+                     callback=callback_handler.process_callback,
+                     follow=False),
     ]
 
 
@@ -416,16 +402,14 @@ class SugarFreeMom(spiders.CrawlSpider):
         # Extract links for finding additional recipe pages,
         # e.g. https://www.sugarfreemom.com/recipes/category/diet/keto/page/2/
         spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=(
-                    r'sugarfreemom.com/recipes/category/diet/keto/page/\d+/'))),
+            linkextractors.LinkExtractor(allow=(
+                r'sugarfreemom.com/recipes/category/diet/keto/page/\d+/'))),
         # Extract links for recipes.
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'sugarfreemom.com/recipes/[^\/]+/$',
-                restrict_xpaths='//main'),
-            callback=callback_handler.process_callback,
-            follow=False),
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=r'sugarfreemom.com/recipes/[^\/]+/$',
+            restrict_xpaths='//main'),
+                     callback=callback_handler.process_callback,
+                     follow=False),
     ]
 
 
@@ -445,15 +429,12 @@ class WholesomeYum(spiders.CrawlSpider):
             linkextractors.LinkExtractor(
                 allow=r'wholesomeyum.com/tag/keto/page/\d+/')),
         # Extract links for recipes.
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=[
-                    r'wholesomeyum.com/[^\/]+/$',
-                    r'wholesomeyum.com/recipes/[^\/]+/$'
-                ],
-                restrict_xpaths='//main'),
-            callback=callback_handler.process_callback,
-            follow=False),
+        spiders.Rule(linkextractors.LinkExtractor(allow=[
+            r'wholesomeyum.com/[^\/]+/$', r'wholesomeyum.com/recipes/[^\/]+/$'
+        ],
+                                                  restrict_xpaths='//main'),
+                     callback=callback_handler.process_callback,
+                     follow=False),
     ]
 
 
@@ -475,10 +456,9 @@ class YourFriendsJ(spiders.CrawlSpider):
                 allow=r'yourfriendsj.com/recipe-library/\?paged=\d+')),
         # Extract links for recipes,
         # e.g. http://yourfriendsj.com/recipes/easy-guacamole-recipe/
-        spiders.Rule(
-            linkextractors.LinkExtractor(
-                allow=r'http://yourfriendsj.com/recipes/[^\/]*/$',
-                restrict_xpaths='//article'),
-            callback=callback_handler.process_callback,
-            follow=False)
+        spiders.Rule(linkextractors.LinkExtractor(
+            allow=r'http://yourfriendsj.com/recipes/[^\/]*/$',
+            restrict_xpaths='//article'),
+                     callback=callback_handler.process_callback,
+                     follow=False)
     ]
