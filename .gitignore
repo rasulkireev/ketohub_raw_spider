@@ -58,8 +58,7 @@ target/
 
 # Vim
 *~
-*.swp
-*.swo
+*.sw?
 
 # Mac OS
 *.DS_Store
@@ -67,3 +66,5 @@ target/
 
 # App Specific
 download_output/*
+
+venv/
